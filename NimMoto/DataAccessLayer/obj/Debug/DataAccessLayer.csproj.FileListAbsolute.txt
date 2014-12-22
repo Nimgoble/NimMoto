@@ -1,0 +1,10 @@
+E:\Programming\GitHub\NimMoto\NimMoto\DataAccessLayer\bin\Debug\DataAccessLayer.dll.config
+E:\Programming\GitHub\NimMoto\NimMoto\DataAccessLayer\bin\Debug\DataAccessLayer.dll
+E:\Programming\GitHub\NimMoto\NimMoto\DataAccessLayer\bin\Debug\DataAccessLayer.pdb
+E:\Programming\GitHub\NimMoto\NimMoto\DataAccessLayer\bin\Debug\EntityFramework.dll
+E:\Programming\GitHub\NimMoto\NimMoto\DataAccessLayer\bin\Debug\EntityFramework.SqlServer.dll
+E:\Programming\GitHub\NimMoto\NimMoto\DataAccessLayer\bin\Debug\EntityFramework.xml
+E:\Programming\GitHub\NimMoto\NimMoto\DataAccessLayer\bin\Debug\EntityFramework.SqlServer.xml
+E:\Programming\GitHub\NimMoto\NimMoto\DataAccessLayer\obj\Debug\DataAccessLayer.csprojResolveAssemblyReference.cache
+E:\Programming\GitHub\NimMoto\NimMoto\DataAccessLayer\obj\Debug\DataAccessLayer.dll
+E:\Programming\GitHub\NimMoto\NimMoto\DataAccessLayer\obj\Debug\DataAccessLayer.pdb
