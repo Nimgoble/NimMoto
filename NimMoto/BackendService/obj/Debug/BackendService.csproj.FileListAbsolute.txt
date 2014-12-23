@@ -124,3 +124,5 @@ E:\Programming\GitHub\NimMoto\NimMoto\BackendService\bin\System.Web.Http.Owin.xm
 E:\Programming\GitHub\NimMoto\NimMoto\BackendService\obj\Debug\BackendService.csprojResolveAssemblyReference.cache
 E:\Programming\GitHub\NimMoto\NimMoto\BackendService\obj\Debug\BackendService.dll
 E:\Programming\GitHub\NimMoto\NimMoto\BackendService\obj\Debug\BackendService.pdb
+E:\Programming\GitHub\NimMoto\NimMoto\BackendService\bin\SendGrid.SmtpApi.dll
+E:\Programming\GitHub\NimMoto\NimMoto\BackendService\bin\SendGridMail.dll
