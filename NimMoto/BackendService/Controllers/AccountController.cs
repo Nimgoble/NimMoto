@@ -66,6 +66,21 @@ namespace BackendService.Controllers
             };
         }
 
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("VerifyCode")]
+        public async Task<IHttpActionResult> PostVerifyCode([FromBody]VerifyCodeModel model)
+        {
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            IdentityResult result = await UserManager.ConfirmEmailAsync(model.UserId, model.Code);
+            if (!result.Succeeded)
+                return GetErrorResult(result);
+
+            return Ok();
+        }
+
         // POST api/Account/Logout
         [Route("Logout")]
         public IHttpActionResult Logout()
@@ -331,8 +346,13 @@ namespace BackendService.Controllers
             var user = new ApplicationUser() { UserName = model.UserName, Email = model.Email };
 
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
-
-            if (!result.Succeeded)
+            if(result.Succeeded)
+            {
+                string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                var callbackUrl = Url.Link("DefaultApi", new { controller = "Account/VerifyCode", UserId = user.Id, Code = code });
+                await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+            }
+            else
             {
                 return GetErrorResult(result);
             }
