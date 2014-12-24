@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BackendService.Models
 {
-    public class VerifyCodeModel
+    public class VerifyEmailAddressModel
     {
         [Required]
         public String UserId { get; set; }

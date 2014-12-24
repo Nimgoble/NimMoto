@@ -68,8 +68,8 @@ namespace BackendService.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        [Route("VerifyCode")]
-        public async Task<IHttpActionResult> PostVerifyCode([FromBody]VerifyCodeModel model)
+        [Route("VerifyEmailAddress")]
+        public async Task<IHttpActionResult> PostVerifyEmailAddress([FromBody]VerifyEmailAddressModel model)
         {
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -349,7 +349,7 @@ namespace BackendService.Controllers
             if(result.Succeeded)
             {
                 string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                var callbackUrl = Url.Link("DefaultApi", new { controller = "Account/VerifyCode", UserId = user.Id, Code = code });
+                var callbackUrl = Url.Link("DefaultApi", new { controller = "Account/VerifyEmailAddress", UserId = user.Id, Code = code });
                 await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
             }
             else
