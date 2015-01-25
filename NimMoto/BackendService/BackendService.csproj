@@ -205,12 +205,26 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\RidersController.cs" />
+    <Compile Include="DAL\NimMotoContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201412262149379_Initial.cs" />
+    <Compile Include="Migrations\201412262149379_Initial.Designer.cs">
+      <DependentUpon>201412262149379_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201412262318295_Rider-Members.cs" />
+    <Compile Include="Migrations\201412262318295_Rider-Members.Designer.cs">
+      <DependentUpon>201412262318295_Rider-Members.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201412262320486_Rider-IsEmailConfirmedViaCustomToken.cs" />
+    <Compile Include="Migrations\201412262320486_Rider-IsEmailConfirmedViaCustomToken.Designer.cs">
+      <DependentUpon>201412262320486_Rider-IsEmailConfirmedViaCustomToken.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\Rider.cs" />
     <Compile Include="Models\VerifyEmailAddressModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
@@ -272,6 +286,7 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+    <Content Include="Views\Home\EmailAddressVerified.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -282,6 +297,17 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201412262149379_Initial.resx">
+      <DependentUpon>201412262149379_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201412262318295_Rider-Members.resx">
+      <DependentUpon>201412262318295_Rider-Members.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201412262320486_Rider-IsEmailConfirmedViaCustomToken.resx">
+      <DependentUpon>201412262320486_Rider-IsEmailConfirmedViaCustomToken.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

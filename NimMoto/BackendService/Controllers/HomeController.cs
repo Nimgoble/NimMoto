@@ -14,5 +14,10 @@ namespace BackendService.Controllers
 
             return View();
         }
+
+        public ActionResult EmailAddressVerified()
+        {
+            return View();
+        }
     }
 }

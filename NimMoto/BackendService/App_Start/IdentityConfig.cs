@@ -10,6 +10,7 @@ using System.Net;
 
 using SendGrid;
 
+using BackendService.DAL;
 using BackendService.Models;
 
 namespace BackendService
@@ -53,18 +54,88 @@ namespace BackendService
         }
     }
 
-    public class ApplicationUserManager : UserManager<ApplicationUser>
+    public class RiderManager : UserManager<Rider>
     {
-        public ApplicationUserManager(IUserStore<ApplicationUser> store)
-            : base(store)
+        public RiderManager(IUserStore<Rider> store) : base(store)
         {
         }
 
-        public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context)
+        public override Task<string> GenerateEmailConfirmationTokenAsync(string userId)
         {
-            var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<ApplicationDbContext>()));
+            Rider rider = this.FindById(userId);
+            if (rider == null)
+                return Task.FromResult(String.Empty);
+
+            Random rand = new Random();
+            rider.CustomEmailConfirmationToken = rand.Next(1000000).ToString("D6");
+
+            IdentityResult updateResult = this.Update(rider);
+            if(updateResult.Succeeded == false)
+            {
+                return Task.FromResult(String.Join(",", updateResult.Errors));
+            }
+
+            return Task.FromResult(rider.CustomEmailConfirmationToken);
+        }
+
+        public override Task<IdentityResult> ConfirmEmailAsync(string userId, string token)
+        {
+            Rider rider = this.FindById(userId);
+            if (rider == null)
+            { 
+                return Task.FromResult
+                        (
+                            new IdentityResult
+                            (
+                                new [] {String.Format("Could not find user '{0}'.", userId)}
+                            )
+                        );
+            }
+
+            if(String.IsNullOrEmpty(token))
+            {
+                return Task.FromResult
+                        (
+                            new IdentityResult
+                            (
+                                new[] { "Provided token is not valid." }
+                            )
+                        );
+            }
+
+            //Should they be trying to confirm when the field is empty?
+            //If the account is already confirmed, then just give it to them.
+            if(String.IsNullOrEmpty(rider.CustomEmailConfirmationToken) && rider.EmailConfirmed)
+            {
+                return Task.FromResult(IdentityResult.Success);
+            }
+
+            if(token.Equals(rider.CustomEmailConfirmationToken))
+            {
+                rider.EmailConfirmed = true;
+                rider.CustomEmailConfirmationToken = null;
+
+                IdentityResult updateResult = this.Update(rider);
+                if (updateResult.Succeeded == false)
+                    return Task.FromResult(updateResult);
+
+                return Task.FromResult(IdentityResult.Success);
+            }
+
+            return Task.FromResult
+                        (
+                            new IdentityResult
+                            (
+                                new[] { "Provided token is incorrect." }
+                            )
+                        );
+        }
+
+        public static RiderManager Create(IdentityFactoryOptions<RiderManager> options, IOwinContext context)
+        {
+            var manager = new RiderManager(new UserStore<Rider>(context.Get<NimMotoContext>()));
             // Configure validation logic for usernames
-            manager.UserValidator = new UserValidator<ApplicationUser>(manager)
+            manager.UserValidator = new UserValidator<Rider>(manager)
             {
                 AllowOnlyAlphanumericUserNames = false,
                 RequireUniqueEmail = true
@@ -76,7 +147,7 @@ namespace BackendService
                 RequireNonLetterOrDigit = false,
                 RequireDigit = true,
                 RequireLowercase = true,
-                RequireUppercase = true,
+                RequireUppercase = true
             };
 
             manager.UserLockoutEnabledByDefault = true;
@@ -88,12 +159,12 @@ namespace BackendService
             //manager.RegisterTwoFactorProvider
             //(
             //    "Phone Code", 
-            //    new PhoneNumberTokenProvider<ApplicationUser>
+            //    new PhoneNumberTokenProvider<Rider>
             //    {
             //        MessageFormat = "Your security code is {0}"
             //    }
             //);
-            manager.RegisterTwoFactorProvider("Email Code", new EmailTokenProvider<ApplicationUser>
+            manager.RegisterTwoFactorProvider("Email Code", new EmailTokenProvider<Rider>
             {
                 Subject = "Security Code",
                 BodyFormat = "Your security code is {0}"
@@ -104,7 +175,7 @@ namespace BackendService
             var dataProtectionProvider = options.DataProtectionProvider;
             if (dataProtectionProvider != null)
             {
-                manager.UserTokenProvider = new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
+                manager.UserTokenProvider = new DataProtectorTokenProvider<Rider>(dataProtectionProvider.Create("ASP.NET Identity"));
             }
             return manager;
         }

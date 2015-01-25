@@ -24,24 +24,24 @@ namespace BackendService.Controllers
     public class AccountController : ApiController
     {
         private const string LocalLoginProvider = "Local";
-        private ApplicationUserManager _userManager;
+        private RiderManager _userManager;
 
         public AccountController()
         {
         }
 
-        public AccountController(ApplicationUserManager userManager,
+        public AccountController(RiderManager userManager,
             ISecureDataFormat<AuthenticationTicket> accessTokenFormat)
         {
             UserManager = userManager;
             AccessTokenFormat = accessTokenFormat;
         }
 
-        public ApplicationUserManager UserManager
+        public RiderManager UserManager
         {
             get
             {
-                return _userManager ?? Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                return _userManager ?? Request.GetOwinContext().GetUserManager<RiderManager>();
             }
             private set
             {
@@ -67,9 +67,9 @@ namespace BackendService.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost]
+        [HttpGet]
         [Route("VerifyEmailAddress")]
-        public async Task<IHttpActionResult> PostVerifyEmailAddress([FromBody]VerifyEmailAddressModel model)
+        public async Task<IHttpActionResult> VerifyEmailAddress([FromUri]VerifyEmailAddressModel model)
         {
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -265,7 +265,7 @@ namespace BackendService.Controllers
                 return new ChallengeResult(provider, this);
             }
 
-            ApplicationUser user = await UserManager.FindAsync(new UserLoginInfo(externalLogin.LoginProvider,
+            Rider user = await UserManager.FindAsync(new UserLoginInfo(externalLogin.LoginProvider,
                 externalLogin.ProviderKey));
 
             bool hasRegistered = user != null;
@@ -343,18 +343,31 @@ namespace BackendService.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = new ApplicationUser() { UserName = model.UserName, Email = model.Email };
+            var user = new Rider() { UserName = model.UserName, Email = model.Email };
 
-            IdentityResult result = await UserManager.CreateAsync(user, model.Password);
-            if(result.Succeeded)
-            {
-                string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                var callbackUrl = Url.Link("DefaultApi", new { controller = "Account/VerifyEmailAddress", UserId = user.Id, Code = code });
-                await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+            try
+            { 
+                IdentityResult result = await UserManager.CreateAsync(user, model.Password);
+                if(result.Succeeded)
+                {
+                    string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                    //string code = await UserManager.GenerateTwoFactorTokenAsync(user.Id);
+                    var callbackUrl = Url.Link("DefaultApi", new { controller = "Account/VerifyEmailAddress", UserId = user.Id, Code = code });
+                    await UserManager.SendEmailAsync
+                    (
+                        user.Id, 
+                        "Confirm your account", 
+                        "Your email confirmation code is: <b>" + code + "</b>"
+                    );
+                }
+                else
+                {
+                    return GetErrorResult(result);
+                }
             }
-            else
+            catch(Exception ex)
             {
-                return GetErrorResult(result);
+                String debugMe = ex.Message;
             }
 
             return Ok();
@@ -377,7 +390,7 @@ namespace BackendService.Controllers
                 return InternalServerError();
             }
 
-            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
+            var user = new Rider() { UserName = model.Email, Email = model.Email };
 
             IdentityResult result = await UserManager.CreateAsync(user);
             if (!result.Succeeded)

@@ -126,3 +126,7 @@ E:\Programming\GitHub\NimMoto\NimMoto\BackendService\obj\Debug\BackendService.dl
 E:\Programming\GitHub\NimMoto\NimMoto\BackendService\obj\Debug\BackendService.pdb
 E:\Programming\GitHub\NimMoto\NimMoto\BackendService\bin\SendGrid.SmtpApi.dll
 E:\Programming\GitHub\NimMoto\NimMoto\BackendService\bin\SendGridMail.dll
+E:\Programming\GitHub\NimMoto\NimMoto\BackendService\obj\Debug\BackendService.Migrations.Initial.resources
+E:\Programming\GitHub\NimMoto\NimMoto\BackendService\obj\Debug\BackendService.csproj.GenerateResource.Cache
+E:\Programming\GitHub\NimMoto\NimMoto\BackendService\obj\Debug\BackendService.Migrations.RiderMembers.resources
+E:\Programming\GitHub\NimMoto\NimMoto\BackendService\obj\Debug\BackendService.Migrations.RiderIsEmailConfirmedViaCustomToken.resources
